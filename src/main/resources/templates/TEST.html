@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>case01</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .top{
+            width: 375px;
+            height: 64px;
+            background-color: #f0f0f0;
+        }
+        .top .xh{
+            width: 33.5px;
+            height: 5.5px;
+            /* color: #000000; */
+            margin-left: 6.5px;
+            margin-top: 7.5px;
+            float: left;
+        }
+        .top .s{
+            width: 39px;
+            height: 15px;
+            font-size: 12px ;
+            margin-left: 5px;
+            margin-top: 3.5px;
+            float: left;
+        }
+        .top .wifi{
+            width: 13px;
+            height: 12px;
+            margin-top: 3px;
+            margin-left: 8px;
+            float: left;
+        }
+        .top .time{
+            /* width: 46px; */
+            height: 15px;
+            font-size: 12px;
+            margin-top: 3.5px;
+            margin-left: 60px;
+            float: left;
+        }
+        .top .dl{
+            width: 33px;
+            height: 14.3px;
+            margin-left: 89px;
+            margin-top: 3.5px;
+            font-size: 12px;
+            float: left;
+        }
+        .top .dc{
+            width: 24.5px;
+            height: 18px;
+            margin-top: 2px;
+            margin-left: 2px;
+            /* float: left; */
+        }
+        .top .jt{
+            width: 20px;
+            height: 17.5px;
+            margin-left: 13px;
+            margin-top: 12px;
+            /* background-color: pink; */
+            float: left;
+        }
+        .top .zb{
+            width: 69px;
+            height: 21px;
+            font-size: 17px;
+            color: #000000;
+            float: left;
+            margin-top: 9px;
+
+        }
+        .top .cd{
+            width: 20px;
+            height: 18px;
+            float:right;
+            margin-right: 13px;
+            margin-top: 12px;
+        }
+        .zj{
+            width: 375px;
+            height: 554px;
+            /* background-color: royalblue; */
+            /* background-color: salmon; */
+            overflow: hidden;
+        }
+        .zj .z{
+            width: 315px;
+            height: 445px;
+            background-color: #f4f4f4;
+            margin-left: 30px;
+            margin-top: 26px;
+            border-radius: 5px;
+            overflow: hidden;
+            /* float: left; */
+        }
+        .zj .z .kt{
+            width: 95px;
+            height: 22px;
+            margin-left: 15px;
+            margin-top: 16px;
+            /* background-color: sandybrown; */
+            float: left;
+        }
+        .zj .z .d{
+            width: 16px;
+            height: 4px;
+            /* float: right; */
+            float: left;
+            margin-left: 180px;
+            margin-top: 26px;
+            /* background-color: seagreen; */
+        }
+        .zj .z .hd{
+            width: 295px;
+            height: 68px;
+            background-color: #ffffff;
+            border: 0 solid #d9d9d9;
+            border-radius: 3px;
+            margin-left: 10px;
+            margin-top: 12px;
+            float: left;
+
+        }
+        .zj .z .hd .fk{
+            width: 14px;
+            height: 14px;
+            margin-top: 13px;
+            margin-left: 15px;
+            /* background-color: skyblue; */
+            float: left;
+        }
+        .zj .z .hd .cd{
+            width: 126px;
+            height: 20px;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-left: 10px;
+            /* background-color: thistle; */
+            float: left;
+        }
+        .zj .z .hd .ld{
+            width: 10px;
+            height: 10px;
+            margin-top: 17px;
+            margin-left: 58px;
+            /* margin-right: 16px; */
+            float: left;
+        }
+        .zj .z .hd .wz{
+            /* width: 36px; */
+            height: 14px;
+            font-size: 10px;
+            margin-left: 3px;
+            margin-top: 12px;
+            color: #9b9b9b;
+            float: left;
+            /* background-color: violet; */
+        }
+        .zj .z .hd .tt{
+            height: 20px;
+            margin-top: 37px;
+            /* background-color: wheat; */
+        }
+        .zj .z .hd .tt .tx{
+            width: 20px;
+            height: 20px;
+            margin-left: 39px;
+            /* margin-top: 15px; */
+            /* background-color: tomato; */
+            float: left;
+        }
+        .zj .z .hd .tt .tw{
+            width: 74px;
+            height: 18px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #cccccc;
+            border-radius: 2px;
+            color: #ffffff;
+            margin-top: 1px;
+            margin-left: 9px;
+            float: left;
+        }
+        .zj .z .hd .tt .nz{
+            width: 11px;
+            height: 11px;
+            margin-top: 5px;
+            margin-left: 14px;
+            float: left;
+        }
+        .zj .z .tj{
+            width: 80px;
+            height: 22px;
+            margin-left: 15px;
+            margin-top: 406px;
+            /* background-color: turquoise; */
+        }
+        .zj .dd{
+            margin-left: 156px;
+            margin-top: 66px;
+            height: 7px;
+            /* background-color: blueviolet; */
+        }
+        .bottom{
+            width: 375px;
+            height: 49px;
+            /* background-color: cornflowerblue; */
+            position: fixed;
+            bottom: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+        .bottom a{
+            display: block;
+            width: 25%;
+            height: 49px;
+            text-align: center;
+            text-decoration: none;
+
+        }
+        .bottom a img{
+            width: 26px;
+            height: 20px;
+            margin-top: 5px;
+        }
+        .bottom a p{
+            font-size: 10px;
+            height: 20px;
+            line-height: 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="top">
+    <img src="img/moreoperation@2x.png" alt="" class="xh">
+    <p class="s">Sketch</p>
+    <img src="img/信号.png" alt="" class="wifi">
+    <p class="time">9:41 AM</p>
+    <p class="dl">100%</p>
+    <img src="img/电池.png" alt="" class="dc">
+    <img src="img/jt.png" alt="" class="jt">
+    <p class="zb">e租宝案</p>
+    <img src="img/菜单.png" alt="" class="cd">
+</div>
+<div class="zj">
+    <div class="z">
+        <p class="kt">开庭前准备 5</p>
+        <img src="img/moreoperation@2x.png" alt="" class="d">
+        <div class="hd">
+            <img src="img/checkbox@2x.png" alt="" class="fk">
+            <p class="cd">核对证据原件并存档</p>
+            <img src="img/点.png" alt="" class="ld">
+            <p class="wz">e租宝案</p>
+            <div class="tt">
+                <img src="img/tasktouxiang1@2x.png" alt="" class="tx">
+                <p class="tw">03-28 截止</p>
+                <img src="img/clock@2x.png" alt="" class="nz">
+            </div>
+        </div>
+        <div class="hd">
+            <img src="img/checkbox@2x.png" alt="" class="fk">
+            <p class="cd">核对证据原件并存档</p>
+            <img src="img/点.png" alt="" class="ld">
+            <p class="wz">e租宝案</p>
+            <div class="tt">
+                <img src="img/tasktouxiang1@2x.png" alt="" class="tx">
+                <p class="tw">03-28 截止</p>
+                <img src="img/clock@2x.png" alt="" class="nz">
+            </div>
+        </div>
+        <div class="hd">
+            <img src="img/checkbox@2x.png" alt="" class="fk">
+            <p class="cd">核对证据原件并存档</p>
+            <img src="img/点.png" alt="" class="ld">
+            <p class="wz">e租宝案</p>
+            <div class="tt">
+                <img src="img/tasktouxiang1@2x.png" alt="" class="tx">
+                <p class="tw">03-28 截止</p>
+                <img src="img/clock@2x.png" alt="" class="nz">
+            </div>
+        </div>
+        <div class="hd">
+            <img src="img/checkbox@2x.png" alt="" class="fk">
+            <p class="cd">核对证据原件并存档</p>
+            <img src="img/点.png" alt="" class="ld">
+            <p class="wz">e租宝案</p>
+            <div class="tt">
+                <img src="img/tasktouxiang1@2x.png" alt="" class="tx">
+                <p class="tw">03-28 截止</p>
+                <img src="img/clock@2x.png" alt="" class="nz">
+            </div>
+        </div>
+        <p class="tj">添加任务...</p>
+    </div>
+    <img src="img/moreoperation@2x.png" alt="" class="dd">
+    <img src="img/moreoperation@2x.png" alt="" class="dd" style="margin-left: 0;">
+</div>
+<div class="bottom">
+    <a href="###">
+        <img src="img/menunamecard@2x.png" alt="">
+        <p>名片夹</p>
+    </a>
+    <a href="###">
+        <img src="img/menugw@2x.png" alt="">
+        <p>官网</p>
+    </a>
+    <a href="###">
+        <img src="img/menumyhover@2x.png" alt="" style="width: 21px; height: 20px;">
+        <p>我的</p>
+    </a>
+</div>
+</body>
+</html>

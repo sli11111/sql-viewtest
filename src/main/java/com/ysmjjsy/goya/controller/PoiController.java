@@ -1,0 +1,11 @@
+package com.ysmjjsy.goya.controller;
+
+import io.swagger.annotations.Api;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/excel")
+@Api(tags = "用户信息")
+public class PoiController {
+}
