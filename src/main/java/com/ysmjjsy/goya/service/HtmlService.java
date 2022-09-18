@@ -117,8 +117,8 @@ public class HtmlService {
     public void exportHtmlFillToPdf() {
 
         //创建一个临时目录接收
-//        String uploadPath = this.getClass().getClassLoader().getResource("").getPath() + File.separator;
-        String uploadPath = FileUtil.getWebRoot().getPath();
+        String uploadPath = this.getClass().getClassLoader().getResource("").getPath() + File.separator;
+//        String uploadPath = FileUtil.getWebRoot().getPath();
         Console.log(uploadPath);
         try {
             //1、创建文档对象实例
@@ -162,8 +162,8 @@ public class HtmlService {
 
             //创建一个pdf 输出到浏览器
             response.setContentType("application/pdf");
-            //这里表示直接返回下载
-            //response.setHeader("Content-Disposition", "attachment;filename=测试.pdf");
+//            //这里表示直接返回下载
+//            response.setHeader("Content-Disposition", "attachment;filename=测试.pdf");
 
             //生成文件
             PdfWriter pdfWriter = PdfWriter.getInstance(document, response.getOutputStream());
