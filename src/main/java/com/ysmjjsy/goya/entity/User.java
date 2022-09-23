@@ -1,5 +1,6 @@
 package com.ysmjjsy.goya.entity;
 
+import cn.hutool.core.annotation.Alias;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ysmjjsy.goya.base.BaseEntity;
@@ -15,38 +16,27 @@ import javax.validation.constraints.NotNull;
  * @create 2022-03-18 21:04
  */
 @Data
-@ApiModel(value="用户", description="用户信息")
-@EqualsAndHashCode(callSuper = true)
-@TableName("T_USER")
 public class User extends BaseEntity {
-
-    @NotNull(message = "用户姓名不能为空")
-    @ApiModelProperty(value = "用户姓名")
-    @TableField("USER_NAME")
+    @Alias("用户名")
     private String userName;
 
-    @NotNull(message = "用户性别不能为空")
-    @ApiModelProperty(value = "用户性别")
-    @TableField("GENDER")
+
+    @Alias("性别")
     private Integer gender;
 
-    @NotNull(message = "用户年龄不能为空")
-    @ApiModelProperty(value = "用户年龄")
-    @TableField("AGE")
+
+
     private Integer age;
 
-    @NotNull(message = "用户邮箱不能为空")
-    @ApiModelProperty(value = "用户邮箱")
-    @TableField("EMAIL")
+
+    @Alias("邮箱")
     private String email;
 
-    @NotNull(message = "用户手机号不能为空")
-    @ApiModelProperty(value = "用户手机号")
-    @TableField("TELPHONE")
+
+    @Alias("电话")
     private String telphone;
 
-    @NotNull(message = "用户身份证号不能为空")
-    @ApiModelProperty(value = "身份证号")
-    @TableField("ID_NUMBER")
+
+    @Alias("身份证")
     private Integer idNumber;
 }

@@ -1,5 +1,6 @@
 package com.ysmjjsy.goya.base;
 
+import cn.hutool.core.annotation.Alias;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -27,26 +28,31 @@ public class BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "主键Id")
     @TableId(value = "ID", type = IdType.ASSIGN_UUID)
+
     private String id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyyMMdd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyyMMdd HH:mm:ss")
     @ApiModelProperty(value = "创建时间")
     @TableField(value = "CREATE_TIME", fill = FieldFill.INSERT)
+    @Alias("创建时间")
     private Date createTime;
 
     @ApiModelProperty(value = "创建人(用户主键Id)")
     @TableField(value = "CREATE_BY", fill = FieldFill.INSERT)
+
     private String createBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyyMMdd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyyMMdd HH:mm:ss")
     @ApiModelProperty(value = "更新时间")
     @TableField(value = "UPDATE_TIME", fill = FieldFill.INSERT_UPDATE)
+    @Alias("更新时间")
     private Date updateTime;
 
     @ApiModelProperty(value = "更新人(用户主键Id)")
     @TableField(value = "UPDATE_BY", fill = FieldFill.INSERT_UPDATE)
+    @Alias("更新者")
     private String updateBy;
 
 

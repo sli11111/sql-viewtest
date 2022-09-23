@@ -2,6 +2,15 @@ package com.ysmjjsy.goya.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfEncodings;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.ysmjjsy.goya.service.HtmlService;
 import io.swagger.annotations.ApiModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -60,7 +71,7 @@ public class HtmlController {
     /**
      * 模板直接导出到浏览器
      */
-    @GetMapping(value = "exportHtmlFillPdfToBrowser")
+    @GetMapping(value = "/exportHtmlFillPdfToBrowser")
     public void exportHtmlFillPdfToBrowser(HttpServletResponse response)throws Exception{
         try {
             htmlService.exportHtmlFillPdfToBrowser(response);
@@ -70,5 +81,24 @@ public class HtmlController {
 
         }
     }
+    @GetMapping("/testpdf")
+    public void testpdf() throws DocumentException, FileNotFoundException {
+        Document doc = new Document();
+//        PdfFont pdfFont = PdfFontFactory.createFont("STSongStd-Light", PdfEncodings.IDENTITY_H);
+        PdfWriter.getInstance(doc, new FileOutputStream( "E:\\py\\createSamplePDF.pdf"));
+        doc.open();
+        Paragraph p = new Paragraph("adgdg张三");
+        Font font = new Font();
+        font.setSize(18);
+        font.setFamily("宋体");
+        p.setFont(font);
+        doc.add(p);
+        doc.close();
 
+
+
+
+
+
+    }
 }

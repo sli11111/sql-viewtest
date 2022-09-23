@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Console;
 import com.itextpdf.text.Document;
 import com.ysmjjsy.goya.util.ChineseFontUtil;
 import com.ysmjjsy.goya.util.OffestUtil;
+import com.ysmjjsy.goya.util.PdfFont;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,6 @@ public class HtmlService {
 
     @Autowired
     private ChineseFontUtil chineseFontUtil;
-
 
     /**
      * 页面直接写入输出
@@ -155,11 +155,13 @@ public class HtmlService {
         try {
             //1、创建文档对象实例
             Document document = new Document();
+
             //页面大小
             Rectangle rect = new Rectangle(PageSize.A4.rotate());
             //页面背景色
             rect.setBackgroundColor(BaseColor.ORANGE);
 
+            document.addTitle("南京分行");
             //创建一个pdf 输出到浏览器
             response.setContentType("application/pdf");
 //            //这里表示直接返回下载
@@ -170,12 +172,14 @@ public class HtmlService {
             //打开pdf
             document.open();
             //写入内容
+            String test = "test";
             Map<String, Object> map = new HashMap<String, Object>(4);
-            map.put("title", "南京分行数据");
+            map.put("title", "风险预警银监数据");
             map.put("graph","请说出你想写的内容");
             //模板内容
             String html = getHtmlTemplatesFill(map);
             ByteArrayInputStream bin = new ByteArrayInputStream(html.getBytes("UTF-8"));
+
             XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document, bin, null, Charset.forName("UTF-8"), chineseFontUtil);
 
             //关闭pdf

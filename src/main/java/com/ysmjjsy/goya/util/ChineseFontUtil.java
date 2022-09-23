@@ -1,9 +1,11 @@
 package com.ysmjjsy.goya.util;
 
+import cn.hutool.core.lang.Console;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontProvider;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -16,11 +18,22 @@ import java.io.File;
  * @date 2018/11/23 01:39
  */
 @Component
-public class ChineseFontUtil implements FontProvider {
+public class ChineseFontUtil  extends XMLWorkerFontProvider implements FontProvider{
     @Override
     public Font getFont(String s, String s1, boolean b, float v, int i, BaseColor baseColor) {
-        return getChineseFont();
+        String font = s;
+        if(font==null){
+            font = "宋体";
+        }
+        if ("".equals(font)) {
+            font = "segoe ui symbol";// 特殊字符
+        }
+        if(v<=0){
+            v=10.5f;
+        }
+        return super.getFont(font, s1, b, v, i, baseColor);
     }
+
 
     @Override
     public boolean isRegistered(String s) {
@@ -35,6 +48,7 @@ public class ChineseFontUtil implements FontProvider {
         String fontPath = uploadPath + File.separator + "templates/msyh.ttf";
         try {
             baseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
