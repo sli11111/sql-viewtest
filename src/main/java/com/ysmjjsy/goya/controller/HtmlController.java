@@ -2,8 +2,6 @@ package com.ysmjjsy.goya.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Console;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
