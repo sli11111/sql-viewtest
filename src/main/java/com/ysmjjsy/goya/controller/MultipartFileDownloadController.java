@@ -2,6 +2,8 @@ package com.ysmjjsy.goya.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.DbUtil;
@@ -24,20 +26,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/mulDownload")
 public class MultipartFileDownloadController {
+    @GetMapping("loadFile")
+    public void loadFile(HttpServletResponse response) throws IOException {
+        File file = FileUtil.file("E:\\test\\test.pdf");
+        FileUtil.writeToStream(file, response.getOutputStream());
+        response.setContentType("application/pdf");
+    }
     /**
      * 从数据库中获取多个表的记录并同时下载
      */
     @GetMapping("/mulDownload")
-    public void mulDownloadFile(HttpServletResponse response) {
+    public void mulDownloadFile(HttpServletResponse response) throws InterruptedException {
         //获取所有表
         List<String> tables = MetaUtil.getTables(DbUtil.getDs());
         //创建excel读写
@@ -54,42 +64,54 @@ public class MultipartFileDownloadController {
         bigWriter.getStyleSet().getHeadCellStyle().setFont(font);
         //创建索引
         createCatalog(bigWriter, tables);
-        for (String tableName : tables) {
+        CountDownLatch latch = new CountDownLatch(tables.size());
+        ThreadUtil.execAsync(()->{
+                for (String tableName : tables) {
+                    try {
+                        Table table = MetaUtil.getTableMeta(DbUtil.getDs(), tableName);
+                        //获取当前表的所有记录
+                        List<Entity> allRecords = this.findAllRecords(table.getTableName());
+                        //获取表结构所有列信息
+                        Collection<Column> columns = table.getColumns();
+                        HashMap<String, String> map = new HashMap<>();
+                        columns.forEach(c -> {
+                            map.put(c.getName(), c.getComment());
+                        });
+                        //添加别名
+                        this.addHeared(bigWriter, map);
 
-            Table table = MetaUtil.getTableMeta(DbUtil.getDs(), tableName);
-            //获取当前表的所有记录
-            List<Entity> allRecords = this.findAllRecords(table.getTableName());
-            //获取表结构所有列信息
-            Collection<Column> columns = table.getColumns();
-            HashMap<String, String> map = new HashMap<>();
-            columns.forEach(c -> {
-                map.put(c.getName(), c.getComment());
-            });
-            //添加别名
-            this.addHeared(bigWriter, map);
-
-            //切换sheet，此时从第0行开始写
-            if (table.getComment() != null && !table.getComment().trim().equals("")) {
-                bigWriter.setSheet(table.getComment());
-                Sheet sheet = bigWriter.getSheet();
+                        //切换sheet，此时从第0行开始写
+                        if (table.getComment() != null && !table.getComment().trim().equals("")) {
+                            bigWriter.setSheet(table.getComment());
+                            Sheet sheet = bigWriter.getSheet();
 //                bigWriter.merge(0,0,0,columns.size()-1,table.getComment(),true);
 //                this.addMerge(sheet);
-            } else {
-                bigWriter.setSheet(table.getTableName());
+                        } else {
+                            bigWriter.setSheet(table.getTableName());
 //                this.addMerge(bigWriter.getSheet());
-            }
+                        }
 
-            //写入sheet页
-            bigWriter.write(allRecords);
+                        //写入sheet页
+                        bigWriter.write(allRecords);
 //行中对齐
-            bigWriter.getStyleSet().setAlign(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
-            for (int i1 = 0; i1 < columns.size(); i1++) {
-                bigWriter.setColumnWidth(i1, 30);
-            }
+                        bigWriter.getStyleSet().setAlign(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
+                        for (int i1 = 0; i1 < columns.size(); i1++) {
+                            bigWriter.setColumnWidth(i1, 30);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        latch.countDown();
+                    }
+                }
+
 //            bigWriter.getSheet().addMergedRegion(new CellRangeAddress(0,0,0,tables.size()-1));
 
-        }
 
+        });
+        System.out.println("-------");
+        latch.await();
+        System.out.println("-------");
         response.setHeader("Content-Disposition", "attachment;filename=test.xlsx");
         try {
             ServletOutputStream outputStream = response.getOutputStream();
