@@ -121,46 +121,30 @@ public class PDFBuilder extends PdfPageEventHelper {
             float bottom = document.getPageSize().getBottom() + 36;
 
             header = new Paragraph("页眉", titleFnot);
-//            Paragraph header1 = new Paragraph("5f, building C2, hkhkjhd Industrial Park,", font);
-//            Paragraph header2 = new Paragraph("No. 44, Changhu Road, Jiangxi Industrial Park", font);
-//            Paragraph header3 = new Paragraph("www.xxx.com", font);
-//            Paragraph header4 = new Paragraph("China (sss) xxxxxxxxxxxx Dgyhi Code Zone", font);
-//            Paragraph header5 = new Paragraph("400-1234-567", font);
-//            Paragraph footer1 = new Paragraph("Acnnecfds Kdjklsnf", blodFnot);
-//            Paragraph footer2 = new Paragraph("The dfdfdf fddffdfdf by fdfdf in thfdfiscxcx fdfd is based on fdfd fdfd has been fdf fdfdf fdfdfdfd erwerwerwerwrww",
-//                    new Font(bf, 9, Font.NORMAL));
-//            Paragraph footer3 = new Paragraph("ffdfdf and fdfdf fffdfd. fdsf fdfd fdfdf xcxcfdfd fdf fdf fdfd to fdfd that the dfdfdssxx is fdfdfdf and werwerwe",
-//                    new Font(bf, 9, Font.NORMAL));
-//            Paragraph footer4 = new Paragraph("seewwdrr, we fdf fdfdf fdfd any fdfdfdxcx for fddfdfdfd, fdfdf, fdferere rererer or rer-rere rer and a werwerwer",
-//                    new Font(bf, 9, Font.NORMAL));
-//            Paragraph footer5 = new Paragraph("rerer or rer of the rererer in rere rerer cxcxcxcxrer rere the retg of tfhe fffgvfgddsss on its sdfsd. The dddddw ",
-//                    new Font(bf, 9, Font.NORMAL));
-//            Paragraph footer6 = new Paragraph("information dsfsdf is DSFSDS DFFDDD and Sdcxvxcvdfdfsd not be dfsdfsdf to any sdfsdf sdfsdfsd the dsfsdfsfdsdfee ",
-//                    new Font(bf, 9, Font.NORMAL));
-//            Paragraph footer7 = new Paragraph("erdsfsdfsd. sdfsdf dsfsdf & dsfsdf dsfsdf sdfsdf of any sfddsfsdf dfdfdfdf the dfdf of the inforfmationssdeeetyy ",
-//                    new Font(bf, 9, Font.NORMAL));
+            // 2.写入前半部分的 第 X页/共
+            int pageS = writer.getPageNumber();
+            String foot1 = "第 " + pageS + " 页/共";
+            Phrase footer = new Phrase(foot1, fontDetail);
 
-            Paragraph footer8 = new Paragraph("------------------", new Font(bf, 9, Font.NORMAL));
-            Paragraph footer9 = new Paragraph(""+writer.getPageNumber(), blodFnot);
+            // 3.计算前半部分的foot1的长度，后面好定位最后一部分的'Y页'这俩字的x轴坐标，字体长度也要计算进去 = len
+            float len = bf.getWidthPoint(foot1, 9);
 
-//                ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, headerImg, center, top, 0); //页眉图标
-            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, header, headerleft, top + 13, 0); //页眉标题
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, header1, headerleft, top - 3, 0); //页眉内容
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, header2, headerleft, top - 15, 0); //页眉
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT, header3, right, top - 15, 0); //页眉
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, header4, headerleft, top - 30, 0); //页眉
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT, header5, right, top - 30, 0); //页眉
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_RIGHT, pageNumberPh, right, bottom + 65, 0); //页码
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, footer1, center, bottom + 60, 0); //页脚标题
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer2, left, bottom + 50, 0); //页脚
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer3, left, bottom + 40, 0); //页脚
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer4, left, bottom + 30, 0); //页脚
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer5, left, bottom + 20, 0); //页脚
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer6, left, bottom + 10, 0); //页脚
-//            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer7, left, bottom, 0); //页脚
+            // 4.拿到当前的PdfContentByte
+            PdfContentByte cb = writer.getDirectContent();
+
+            // 5.写入页脚1，x轴就是(右margin+左margin + right() -left()- len)/2.0F
+            // ,y轴就是底边界-20,否则就贴边重叠到数据体里了就不是页脚了；注意Y轴是从下往上累加的，最上方的Top值是大于Bottom好几百开外的。
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, footer,(document.rightMargin() + document.right() + document.leftMargin() - document.left() - len) / 2.0F + 20F,document.bottom() - 20, 0);
+
+            // 6.写入页脚2的模板（就是页脚的Y页这俩字）添加到文档中，计算模板的和Y轴,X=(右边界-左边界 - 前半部分的len值)/2.0F +
+            // len ， y 轴和之前的保持一致，底边界-20
+            cb.addTemplate(total,(document.rightMargin() + document.right() + document.leftMargin() - document.left()) / 2.0F + 20F,document.bottom() - 20);
+            // 调节模版显示的位置
+
+//          howTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer7, left, bottom, 0); //页脚
 ////          页脚
-          ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer8, left, bottom - 10, 0); //页脚
-            ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, footer9, center, bottom - 20, 0); //页脚
+         // ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_LEFT, footer8, left, bottom - 10, 0); //页脚
+           // ColumnText.showTextAligned(writer.getDirectContent(), Element.ALIGN_CENTER, footer9, center, bottom - 20, 0); //页脚
         }
     }
 
@@ -197,10 +181,11 @@ public class PDFBuilder extends PdfPageEventHelper {
 
     public void onCloseDocument(PdfWriter writer, Document document) {
         // 7.最后一步了，就是关闭文档的时候，将模板替换成实际的 Y 值,至此，page x of y 制作完毕，完美兼容各种文档size。
+
         ChineseFontUtil chineseFontUtil = new ChineseFontUtil();
         total.beginText();
         total.setFontAndSize(bf,9);// 生成的模版的字体、颜色
-        String foot9 = "" + (writer.getPageNumber()) + " 页"; //页脚内容拼接  如  第1页/共2页
+        String foot9 = "" + (writer.getPageNumber()-1) + " 页"; //页脚内容拼接  如  第1页/共2页
         total.showText(foot9);// 模版显示的内容
         total.endText();
         total.closePath();

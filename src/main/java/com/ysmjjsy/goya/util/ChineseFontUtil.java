@@ -21,8 +21,24 @@ import java.io.IOException;
  */
 @Component
 public class ChineseFontUtil  extends XMLWorkerFontProvider implements FontProvider{
+    public String[] fonts = { "msyh.ttf","seguisym.ttf" ,"simsun.ttc","simfang.ttf","simhei.ttf","JDFSCHAO.TTF","仿宋_GB2312.ttf"};
+
+    public ChineseFontUtil() {
+        super(XMLWorkerFontProvider.DONTLOOKFORFONTS);
+        //获取资源文件字体
+        //获取文件根地址
+        String uploadPath = this.getClass().getClassLoader().getResource("").getPath() + File.separator;
+        //获取字体解决中文乱码问题
+        String path = uploadPath + File.separator + "templates"+File.separator;
+       // String path =  this.getClass().getClassLoader().getResource("").getPath() + File.separator;
+        // 注册字体
+        for (String font : fonts) {
+            this.register(path+font);
+        }
+    }
+
     @Override
-    public Font getFont(String s, String s1, boolean b, float v, int i, BaseColor baseColor) {
+    public Font getFont(String s,float v,  BaseColor baseColor) {
         String font = s;
         if(font==null){
             font = "宋体";
@@ -33,7 +49,7 @@ public class ChineseFontUtil  extends XMLWorkerFontProvider implements FontProvi
         if(v<=0){
             v=10.5f;
         }
-        return super.getFont(font, s1, b, v, i, baseColor);
+        return super.getFont(font,  v,  baseColor);
     }
 
 
@@ -62,7 +78,7 @@ public class ChineseFontUtil  extends XMLWorkerFontProvider implements FontProvi
         BaseFont bfChinese;
 
         Font fontChinese = null;
-        String fontPath = uploadPath + File.separator + "templates/msyh.ttf";
+        String fontPath = uploadPath + File.separator + "templates/simhei.ttf";
         try {
             bfChinese = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             // fontChinese = new Font(bfChinese, 12, Font.NORMAL);

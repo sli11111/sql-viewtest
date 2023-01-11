@@ -23,7 +23,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.sun.deploy.net.URLEncoder;
 import com.ysmjjsy.goya.base.MyExcelWriter;
-import com.ysmjjsy.goya.entity.User;
+//import com.ysmjjsy.goya.entity.User;
 import com.ysmjjsy.goya.entity.UserExport;
 import io.swagger.annotations.Api;
 import org.apache.poi.ss.usermodel.*;
@@ -100,73 +100,73 @@ public class DownloadController {
     /**
      导出excel 带样式
      */
-    @GetMapping("exportExcelStyle")
-    public void exportExcelStyle(HttpServletResponse response) throws IOException {
-        ArrayList<User> users = new ArrayList<>();
-        User user = null;
-        for (int i = 0; i < 100000; i++) {
-            user = new User();
-            user.setUserName(Thread.currentThread().getName());
-            user.setAge(RandomUtil.randomInt(1, 100));
-            user.setEmail("21345@qq.com");
-            user.setGender(1);
-            user.setIdNumber(Convert.toInt(IdUtil.getSnowflakeNextId()));
-            user.setId(IdUtil.randomUUID());
-            user.setCreateBy("mcc");
-            user.setCreateTime(new Date());
-            user.setTelphone("18726317886");
-            user.setUpdateBy("mcc");
-            user.setUpdateTime(new Date());
-            users.add(user);
-        }
-        List<UserExport> userExports = BeanUtil.copyToList(users, UserExport.class);
-        Console.log("show info:{}", users);
-        ExcelWriter writer = MyExcelWriter.getBigWriter();
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset:utf-8");
-
-        // 设置所有列为自动宽度，不考虑合并单元格
-//        SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
-//        sheet.trackAllColumnsForAutoSizing();
+//    @GetMapping("exportExcelStyle")
+//    public void exportExcelStyle(HttpServletResponse response) throws IOException {
+//        ArrayList<User> users = new ArrayList<>();
+//        User user = null;
+//        for (int i = 0; i < 100000; i++) {
+//            user = new User();
+//            user.setUserName(Thread.currentThread().getName());
+//            user.setAge(RandomUtil.randomInt(1, 100));
+//            user.setEmail("21345@qq.com");
+//            user.setGender(1);
+//            user.setIdNumber(Convert.toInt(IdUtil.getSnowflakeNextId()));
+//            user.setId(IdUtil.randomUUID());
+//            user.setCreateBy("mcc");
+//            user.setCreateTime(new Date());
+//            user.setTelphone("18726317886");
+//            user.setUpdateBy("mcc");
+//            user.setUpdateTime(new Date());
+//            users.add(user);
+//        }
+//        List<UserExport> userExports = BeanUtil.copyToList(users, UserExport.class);
+//        Console.log("show info:{}", users);
+//        ExcelWriter writer = MyExcelWriter.getBigWriter();
+//        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset:utf-8");
+//
+//        // 设置所有列为自动宽度，不考虑合并单元格
+////        SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
+////        sheet.trackAllColumnsForAutoSizing();
+////        writer.autoSizeColumnAll();
+//
+//        CellStyle cellStyle = writer.createCellStyle();
+//        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+//        writer.merge(5,"用户信息表");
+//        writer.setOnlyAlias(true);
+//
+//        DataFormat dataFormat = writer.getWorkbook().createDataFormat();
+////这里的日期格式化规则与SimpleDateFormat不一样,
+////部分格式可参考org.apache.poi.ss.usermodel.BuiltinFormats
+//        short format = dataFormat.getFormat("yyyyMMdd");
+//        StyleSet styleSet = writer.getStyleSet();
+//        styleSet.getCellStyleForDate()
+//                .setDataFormat(format);
+//
+//
+//        StyleSet style = writer.getStyleSet();
+//        org.apache.poi.ss.usermodel.Font font = writer.createFont();
+//        font.setBold(true);
+//        font.setFontHeightInPoints((short) 18);
+//        //重点，设置中文字体
+//        font.setFontName("宋体");
+//        style.getHeadCellStyle().setFont(font);
+//        //设置标题
+//
+//        writer.write(userExports,true);
 //        writer.autoSizeColumnAll();
-
-        CellStyle cellStyle = writer.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        writer.merge(5,"用户信息表");
-        writer.setOnlyAlias(true);
-
-        DataFormat dataFormat = writer.getWorkbook().createDataFormat();
-//这里的日期格式化规则与SimpleDateFormat不一样,
-//部分格式可参考org.apache.poi.ss.usermodel.BuiltinFormats
-        short format = dataFormat.getFormat("yyyyMMdd");
-        StyleSet styleSet = writer.getStyleSet();
-        styleSet.getCellStyleForDate()
-                .setDataFormat(format);
-
-
-        StyleSet style = writer.getStyleSet();
-        org.apache.poi.ss.usermodel.Font font = writer.createFont();
-        font.setBold(true);
-        font.setFontHeightInPoints((short) 18);
-        //重点，设置中文字体
-        font.setFontName("宋体");
-        style.getHeadCellStyle().setFont(font);
-        //设置标题
-
-        writer.write(userExports,true);
-        writer.autoSizeColumnAll();
-
-        String fileName= URLEncoder.encode("用户信息","UTF-8");
-        //Content-disposition是MIME协议的扩展，MIME协议指示MIME用户代理如何显示附加的文件。
-        response.setHeader("Content-Disposition","attachment;filename="+fileName+".xlsx");
-        ServletOutputStream outputStream= response.getOutputStream();
-
-        //将Writer刷新到OutPut
-        writer.flush(outputStream,true);
-        outputStream.close();
-        writer.close();
-
-
-    }
+//
+//        String fileName= URLEncoder.encode("用户信息","UTF-8");
+//        //Content-disposition是MIME协议的扩展，MIME协议指示MIME用户代理如何显示附加的文件。
+//        response.setHeader("Content-Disposition","attachment;filename="+fileName+".xlsx");
+//        ServletOutputStream outputStream= response.getOutputStream();
+//
+//        //将Writer刷新到OutPut
+//        writer.flush(outputStream,true);
+//        outputStream.close();
+//        writer.close();
+//
+//
+//    }
 
 
 

@@ -2,13 +2,21 @@ package com.ysmjjsy.goya.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.lang.Console;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.poi.excel.BigExcelWriter;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
 import com.itextpdf.layout.element.Div;
 import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.Text;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
+import com.ysmjjsy.goya.test.ImportTest;
 import com.ysmjjsy.goya.util.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.util.IOUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +28,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.alibaba.druid.sql.ast.statement.SQLObjectType.USER;
+import static com.alibaba.druid.util.FnvHash.Constants.OWNER;
 
 @RestController
 @RequestMapping("/commons")
@@ -29,6 +42,7 @@ public class CommonsController {
      * @param response
      * @throws IOException
      */
+
     @GetMapping("/loadFile")
     public void loadFile(HttpServletResponse response) throws IOException {
         File file = FileUtil.file("E:\\test\\test.pdf");
@@ -38,6 +52,36 @@ public class CommonsController {
         IoUtil.close(outputStream);
 
     }
+    @GetMapping("/exportExcelTestData")
+    public void exportExcelTestData(HttpServletResponse response) throws IOException {
+        ServletOutputStream outputStream = response.getOutputStream();
+        response.setHeader("Content-Disposition", "attachment;filename=test.xlsx");
+        String uploadPath = new ImportTest().getClass().getClassLoader().getResource("").getPath() + File.separator;
+
+        String path = uploadPath + File.separator + "templates" + File.separator + "调度配置模板4.0.xlsx";
+        for (int i = 1; i <= 12; i++) {
+            ExcelUtil.readBySax(path, i, (sheetIndex, rowIndex, list) -> {
+                if (sheetIndex > 0 && rowIndex > 1) {
+                    Console.log("{}", list);
+                    //入库操作
+                    BigExcelWriter bigWriter = ExcelUtil.getBigWriter(path);
+                    if (!CollectionUtils.isEmpty(list)) {
+                        List<Object> collect = list.stream().filter(x -> !ObjectUtil.isEmpty(x)).collect(Collectors.toList());
+                        bigWriter.write(collect);
+                        bigWriter.write(collect);
+                    }
+                    bigWriter.flush(outputStream,true);
+                    try {
+                        outputStream.close();
+                        bigWriter.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+//        writer.close();
+                }
+            });
+        }
+    }
     /**
      * 生成pdf测试itextpdf
      */
@@ -46,18 +90,22 @@ public class CommonsController {
         //字体中文
         ChineseFontUtil chineseFontUtil = new ChineseFontUtil();
         Rectangle rectangle = new Rectangle(PageSize.A4);
+
         Document document =null;
         document = new Document(rectangle);
         ServletOutputStream outputStream = response.getOutputStream();
         //书写器
+
         PdfWriter writer = PdfWriter.getInstance(document, outputStream);
+        writer.setEncryption("000000".getBytes(), "000000".getBytes(),  PdfWriter.ALLOW_COPY, PdfWriter.STRENGTH40BITS);
+
         PDFBuilder pdfBuilder = new PDFBuilder();
         writer.setPageEvent(pdfBuilder);
 //        PageIndex pageIndex = new PageIndex(30f,40f);
 //        writer.setPageEvent(pageIndex);
         //先打开文档流之后才能添加段落
         document.open();
-        Paragraph p = new Paragraph("tagagjian讲解！", chineseFontUtil.getChineseFont2(20));
+        Paragraph p = new Paragraph("tagagjian讲解！", chineseFontUtil.getFont("黑体",20,BaseColor.BLUE));
         p.setAlignment(Element.ALIGN_CENTER);
         p.setSpacingAfter(30f);
 //        Paragraph p = new Paragraph();
@@ -84,20 +132,18 @@ public class CommonsController {
         //表格背景色
         BaseColor green = new BaseColor(175, 215, 136);
         BaseColor blue = new BaseColor(148, 170, 214);
-
         // PdfPTable[PdfPCell[Paragraph]]
-
         // 添加表格的内容
         String uploadPath = this.getClass().getClassLoader().getResource("").getPath() + File.separator;
         String fontPath = uploadPath + File.separator + "templates/msyh.ttf";
         BaseFont bf = null;
         BaseFont blodbf = null;
-//        BaseFont chineseFont = null;
-//        BaseFont chineseBlodFont = null;
+//      BaseFont chineseFont = null;
+//      BaseFont chineseBlodFont = null;
         try {
             bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             blodbf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-//            chineseFont = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
+//          chineseFont = BaseFont.createFont("STSongStd-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
         } catch (IOException | DocumentException e) {
             e.printStackTrace();
         }
@@ -108,15 +154,14 @@ public class CommonsController {
         Font textFont = new Font(bf, 10.5f, Font.NORMAL);
         Font textFontGray = new Font(blodbf, 10.5f, Font.NORMAL, new BaseColor(215, 215, 215));
         Font chapterFont = new Font(blodbf, 14f, Font.NORMAL);
-//        Font coverFont = new Font(chineseFont, 30, Font.NORMAL);
-//        Font titleFont = new Font(chineseFont, 16, Font.NORMAL);
-//        Font coverTiletFontMarked = new Font(chineseFont, 16f, Font.NORMAL, new BaseColor(148, 170, 214));
-//        Font textFontBold = new Font(chineseFont, 10.5f, Font.NORMAL);
-//        Font textFont = new Font(chineseFont, 10.5f, Font.NORMAL);
-//        Font textFontGray = new Font(chineseFont, 10.5f, Font.NORMAL, new BaseColor(215, 215, 215));
-//        Font chapterFont = new Font(chineseFont, 14f, Font.NORMAL);
-
-//        Font textFont = new Font(bf, 10.5f, Font.NORMAL);
+//      Font coverFont = new Font(chineseFont, 30, Font.NORMAL);
+//      Font titleFont = new Font(chineseFont, 16, Font.NORMAL);
+//      Font coverTiletFontMarked = new Font(chineseFont, 16f, Font.NORMAL, new BaseColor(148, 170, 214));
+//      Font textFontBold = new Font(chineseFont, 10.5f, Font.NORMAL);
+//      Font textFont = new Font(chineseFont, 10.5f, Font.NORMAL);
+//      Font textFontGray = new Font(chineseFont, 10.5f, Font.NORMAL, new BaseColor(215, 215, 215));
+//      Font chapterFont = new Font(chineseFont, 14f, Font.NORMAL);
+//      Font textFont = new Font(bf, 10.5f, Font.NORMAL);
         // 添加表头元素
         for (int i = 0; i < 6; i++) {
             datatable.addCell(getCell(new Phrase("tst"+i,textFont),blue,1,1));
@@ -186,36 +231,13 @@ public class CommonsController {
             datatable.addCell(new Paragraph("tst"+i, chineseFontUtil.getChineseFont2(10)));
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
 
 
         document.add(datatable);
-
         writer.setPdfVersion(PdfWriter.PDF_VERSION_1_2);
         document.close();
-
-
-
         IoUtil.close(outputStream);
 
     }

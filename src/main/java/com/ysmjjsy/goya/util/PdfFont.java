@@ -2,13 +2,14 @@ package com.ysmjjsy.goya.util;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 
 import java.io.File;
     public class PdfFont extends XMLWorkerFontProvider {
 
         //新增PDF字体：特殊字符、宋体、仿宋、黑体
-        public String[] fonts = { "seguisym.ttf" ,"simsun.ttc","simfang.ttf","simhei.ttf"};
+        public String[] fonts = { "msyh.ttf"};
 
         public PdfFont() {
             super(XMLWorkerFontProvider.DONTLOOKFORFONTS);
@@ -24,7 +25,9 @@ import java.io.File;
         public Font getFont(String fontname, String encoding, boolean embedded, float size, int style, BaseColor color) {
             //Set<String> fonts2 = this.getRegisteredFonts(); //获取注册字体
             String font = fontname;
+
             if(font==null){
+
                 font = "宋体";
             }
             if ("".equals(font)) {

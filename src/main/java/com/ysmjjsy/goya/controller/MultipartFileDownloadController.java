@@ -35,11 +35,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/mulDownload")
+@RequestMapping("mulDownload")
 public class MultipartFileDownloadController {
     @GetMapping("loadFile")
     public void loadFile(HttpServletResponse response) throws IOException {
-        File file = FileUtil.file("E:\\test\\test.pdf");
+        File file = FileUtil.file("E:/image3/generarotPdf.pdf");
         FileUtil.writeToStream(file, response.getOutputStream());
         response.setContentType("application/pdf");
     }
@@ -51,7 +51,7 @@ public class MultipartFileDownloadController {
         //获取所有表
         List<String> tables = MetaUtil.getTables(DbUtil.getDs());
         //创建excel读写
-        ExcelWriter bigWriter = ExcelUtil.getBigWriter();
+        ExcelWriter bigWriter = ExcelUtil.getBigWriter(60000);
 
         //设置日期
         short i = bigWriter.getWorkbook().createDataFormat().getFormat("yyyy年MM月dd日");
@@ -79,7 +79,6 @@ public class MultipartFileDownloadController {
                         });
                         //添加别名
                         this.addHeared(bigWriter, map);
-
                         //切换sheet，此时从第0行开始写
                         if (table.getComment() != null && !table.getComment().trim().equals("")) {
                             bigWriter.setSheet(table.getComment());
@@ -103,23 +102,40 @@ public class MultipartFileDownloadController {
                     }finally {
                         latch.countDown();
                     }
+                    Cell cell = bigWriter.getCell(0, 0, true);
+                    Hyperlink hyperlink = bigWriter.getWorkbook().getCreationHelper().createHyperlink(HyperlinkType.DOCUMENT);
+                    String linkStr = "#" + "目录" + "!A1";
+                    hyperlink.setAddress(linkStr);
+                    cell.setHyperlink(hyperlink);
+                    // 点击进行跳转
+                    /* 设置为超链接的样式*/
+                    CellStyle linkStyle = bigWriter.getWorkbook().createCellStyle();
+                    Font cellFont = bigWriter.createFont();
+
+                    cellFont.setUnderline((byte) 1);
+                    cellFont.setColor(HSSFColor.HSSFColorPredefined.BLUE.getIndex());
+                    cellFont.setBold(true);
+                    bigWriter.getStyleSet().setAlign(HorizontalAlignment.CENTER,VerticalAlignment.CENTER);
+                    linkStyle.setFont(cellFont);
+                    cell.setCellStyle(linkStyle);
                 }
 
 //            bigWriter.getSheet().addMergedRegion(new CellRangeAddress(0,0,0,tables.size()-1));
-
-
         });
         System.out.println("-------");
         latch.await();
+
         System.out.println("-------");
         response.setHeader("Content-Disposition", "attachment;filename=test.xlsx");
         try {
             ServletOutputStream outputStream = response.getOutputStream();
             //将Writer刷新到OutPut
+
             bigWriter.flush(outputStream, true);
             SXSSFSheet sheet = (SXSSFSheet) bigWriter.getSheet();
             sheet.trackAllColumnsForAutoSizing();
             bigWriter.autoSizeColumnAll();
+
             outputStream.close();
             bigWriter.close();
         } catch (IOException e) {
