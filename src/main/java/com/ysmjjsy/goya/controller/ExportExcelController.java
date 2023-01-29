@@ -323,6 +323,21 @@ public class ExportExcelController {
             }
         }
     }
+    /**
+     * 要获得将检查输入值的验证,例如,为10到100之间的整数
+     */
+    @GetMapping("validationNum")
+    public void ValidationNum(HttpServletResponse response) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook("D:\\gitProject\\demo\\0620\\sql-viewtest\\src\\main\\resources\\templates\\test.xlsx");
+        XSSFSheet sheet = workbook.getSheetAt(1);
+        for (int i = 0; i < sheet.getLastRowNum();i++) {
+            XSSFRow row = sheet.getRow(i);
+            for (int j = 0; j < row.getLastCellNum(); j++) {
+
+            }
+
+        }
+    }
 
 }
 
